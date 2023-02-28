@@ -1,6 +1,7 @@
 package lac
 
 import (
+	"fmt"
 	"sort"
 )
 
@@ -77,11 +78,18 @@ func areStringSlicesEqual(a, b []string) bool {
 func copyMap(m map[string]any) map[string]any {
 	ret := map[string]any{}
 	for k, v := range m {
-		mm, ok := v.(map[string]any)
-		if ok {
-			ret[k] = copyMap(mm)
-		} else {
-			ret[k] = v
+		switch vv := v.(type) {
+		case string, float64:
+			ret[k] = vv
+		case map[string]any:
+			ret[k] = copyMap(vv)
+		case []any:
+			a := make([]any, len(vv))
+			copy(a, vv)
+		case nil:
+			ret[k] = nil
+		default:
+			panic(fmt.Sprintf("Unknown type: %#v", vv))
 		}
 	}
 	return ret

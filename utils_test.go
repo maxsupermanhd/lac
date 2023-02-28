@@ -10,7 +10,7 @@ func TestCopyMap(t *testing.T) {
 		"nested": map[string]any{
 			"key":        "value",
 			"answer":     42,
-			"digits":     []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+			"digits":     []any{0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
 			"interfaces": []any{"test1", "test2"},
 		},
 		"funny": []int{69, 420},
@@ -21,7 +21,7 @@ func TestCopyMap(t *testing.T) {
 	if !ok {
 		t.Fatal("Failed to get digitsA")
 	}
-	digitsA, ok := digitsAi.([]int)
+	digitsA, ok := digitsAi.([]any)
 	if !ok {
 		t.Fatal("DigitsA have wrong type")
 	}
@@ -32,12 +32,12 @@ func TestCopyMap(t *testing.T) {
 	if !ok {
 		t.Fatal("Failed to get digitsB")
 	}
-	digitsB, ok := digitsBi.([]int)
+	digitsB, ok := digitsBi.([]any)
 	if !ok {
 		t.Fatal("DigitsB have wrong type")
 	}
 
-	digitsTarget := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
+	digitsTarget := []any{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
 	for i := range digitsB {
 		if digitsB[i] != digitsTarget[i] {
 			t.Fatal("Digits changed without Set")

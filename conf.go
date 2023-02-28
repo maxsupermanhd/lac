@@ -2,6 +2,7 @@ package lac
 
 import (
 	"encoding/json"
+	"fmt"
 	"os"
 	"sync"
 
@@ -34,6 +35,12 @@ func (c *Conf) SetTree(t map[string]any) {
 	c.lock.Unlock()
 }
 
+func (c *Conf) CopyTree(t map[string]any) {
+	c.lock.Lock()
+	c.tree = copyMap(t)
+	c.lock.Unlock()
+}
+
 func (c *Conf) Set(v any, k ...string) {
 	c.lock.Lock()
 	setTree(c.tree, v, k)
@@ -58,7 +65,24 @@ func (c *Conf) GetToStruct(t *any, k ...string) error {
 func (c *Conf) Get(k ...string) (any, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	return lookupTree(c.tree, k)
+	v, ok := lookupTree(c.tree, k)
+	if !ok {
+		return nil, false
+	}
+	switch vv := v.(type) {
+	case string, float64:
+		return vv, true
+	case map[string]any:
+		return copyMap(vv), true
+	case []any:
+		ret := make([]any, len(vv))
+		copy(ret, vv)
+		return ret, true
+	case nil:
+		return nil, true
+	default:
+		panic(fmt.Sprintf("Unknown type: %#v", vv))
+	}
 }
 
 type ConfWalkFunc func(k []string, v any)

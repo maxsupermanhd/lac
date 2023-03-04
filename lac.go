@@ -8,17 +8,17 @@ var (
 	ErrNoKey = errors.New("key not found")
 )
 
-type ConfListenerFunc func(k []string, newval any)
+// type ConfListenerFunc func(k []string, newval any)
 
-type ConfListener struct {
-	f    ConfListenerFunc
-	path []string
-}
+// type ConfListener struct {
+// 	f    ConfListenerFunc
+// 	path []string
+// }
 
 func NewConf() *Conf {
 	return &Conf{
-		tree:      map[string]any{},
-		listeners: []ConfListener{},
+		tree: map[string]any{},
+		// listeners: []ConfListener{},
 	}
 }
 

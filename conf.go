@@ -10,9 +10,9 @@ import (
 )
 
 type Conf struct {
-	tree      map[string]any
-	listeners []ConfListener
-	lock      sync.Mutex
+	tree map[string]any
+	// listeners []ConfListener
+	lock sync.Mutex
 }
 
 func (c *Conf) ToBytesJSON() ([]byte, error) {
@@ -76,11 +76,11 @@ func (c *Conf) CopyTree(t map[string]any) {
 func (c *Conf) Set(v any, k ...string) {
 	c.lock.Lock()
 	setTree(c.tree, v, k)
-	for _, l := range c.listeners {
-		if areStringSlicesEqual(l.path, k) {
-			l.f(k, v)
-		}
-	}
+	// for _, l := range c.listeners {
+	// 	if areStringSlicesEqual(l.path, k) {
+	// 		l.f(k, v)
+	// 	}
+	// }
 	c.lock.Unlock()
 }
 

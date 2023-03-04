@@ -15,18 +15,50 @@ type Conf struct {
 	lock      sync.Mutex
 }
 
-func (c *Conf) SetBytesJSON(b []byte) error {
+func (c *Conf) ToBytesJSON() ([]byte, error) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	return json.Marshal(c.tree)
+}
+
+func (c *Conf) ToBytesIndentJSON() ([]byte, error) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	return json.MarshalIndent(c.tree, "", "\t")
+}
+
+func (c *Conf) ToFileJSON(path string, perm os.FileMode) error {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	b, err := json.Marshal(c.tree)
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(path, b, perm)
+}
+
+func (c *Conf) ToFileIndentJSON(path string, perm os.FileMode) error {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	b, err := json.MarshalIndent(c.tree, "", "\t")
+	if err != nil {
+		return err
+	}
+	return os.WriteFile(path, b, perm)
+}
+
+func (c *Conf) SetFromBytesJSON(b []byte) error {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	return json.Unmarshal(b, &c.tree)
 }
 
-func (c *Conf) SetFileJSON(path string) error {
+func (c *Conf) SetFromFileJSON(path string) error {
 	b, err := os.ReadFile(path)
 	if err != nil {
 		return err
 	}
-	return c.SetBytesJSON(b)
+	return c.SetFromBytesJSON(b)
 }
 
 func (c *Conf) SetTree(t map[string]any) {

@@ -24,7 +24,7 @@ func NewConf() *Conf {
 
 func FromBytesJSON(b []byte) (*Conf, error) {
 	c := NewConf()
-	err := c.SetBytesJSON(b)
+	err := c.SetFromBytesJSON(b)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func FromBytesJSON(b []byte) (*Conf, error) {
 
 func FromFileJSON(path string) (*Conf, error) {
 	c := NewConf()
-	err := c.SetFileJSON(path)
+	err := c.SetFromFileJSON(path)
 	if err != nil {
 		return nil, err
 	}

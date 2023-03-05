@@ -124,3 +124,7 @@ func (c *Conf) Walk(f ConfWalkFunc) {
 	walkTree(c.tree, []string{}, f)
 	c.lock.Unlock()
 }
+
+func (c *Conf) SubTree(path ...string) *ConfSubtree {
+	return NewSubTree(c, path...)
+}

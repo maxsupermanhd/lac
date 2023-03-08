@@ -117,6 +117,82 @@ func (c *Conf) Get(k ...string) (any, bool) {
 	}
 }
 
+func (c *Conf) GetString(k ...string) (string, bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	v, ok := lookupTree(c.tree, k)
+	if !ok {
+		return "", false
+	}
+	r, ok := v.(string)
+	return r, ok
+}
+
+func (c *Conf) GetDString(d string, k ...string) string {
+	r, ok := c.GetString(k...)
+	if ok {
+		return r
+	}
+	return d
+}
+
+func (c *Conf) GetFloat64(k ...string) (float64, bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	v, ok := lookupTree(c.tree, k)
+	if !ok {
+		return 0.0, false
+	}
+	r, ok := v.(float64)
+	return r, ok
+}
+
+func (c *Conf) GetDFloat64(d float64, k ...string) float64 {
+	r, ok := c.GetFloat64(k...)
+	if ok {
+		return r
+	}
+	return d
+}
+
+func (c *Conf) GetInt64(k ...string) (int64, bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	v, ok := lookupTree(c.tree, k)
+	if !ok {
+		return 0, false
+	}
+	r, ok := v.(int64)
+	return r, ok
+}
+
+func (c *Conf) GetDInt64(d int64, k ...string) int64 {
+	r, ok := c.GetInt64(k...)
+	if ok {
+		return r
+	}
+	return d
+}
+
+func (c *Conf) GetInt(k ...string) (int, bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	v, ok := lookupTree(c.tree, k)
+	if !ok {
+		return 0, false
+	}
+	r, ok := v.(int)
+	return r, ok
+}
+
+func (c *Conf) GetDInt(d int, k ...string) int {
+	r, ok := c.GetInt(k...)
+	if ok {
+		return r
+	}
+	return d
+}
+
 type ConfWalkFunc func(k []string, v any)
 
 func (c *Conf) Walk(f ConfWalkFunc) {

@@ -117,6 +117,17 @@ func (c *Conf) Get(k ...string) (any, bool) {
 	}
 }
 
+func (c *Conf) GetMapStringAny(k ...string) (map[string]any, bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	v, ok := lookupTree(c.tree, k)
+	if !ok {
+		return nil, false
+	}
+	r, ok := v.(map[string]any)
+	return r, ok
+}
+
 func (c *Conf) GetString(k ...string) (string, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -133,6 +144,15 @@ func (c *Conf) GetDString(d string, k ...string) string {
 	if ok {
 		return r
 	}
+	return d
+}
+
+func (c *Conf) GetDSString(d string, k ...string) string {
+	r, ok := c.GetString(k...)
+	if ok {
+		return r
+	}
+	c.Set(d, k...)
 	return d
 }
 
@@ -155,6 +175,15 @@ func (c *Conf) GetDFloat64(d float64, k ...string) float64 {
 	return d
 }
 
+func (c *Conf) GetDSFloat64(d float64, k ...string) float64 {
+	r, ok := c.GetFloat64(k...)
+	if ok {
+		return r
+	}
+	c.Set(d, k...)
+	return d
+}
+
 func (c *Conf) GetInt64(k ...string) (int64, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -174,6 +203,15 @@ func (c *Conf) GetDInt64(d int64, k ...string) int64 {
 	return d
 }
 
+func (c *Conf) GetDSInt64(d int64, k ...string) int64 {
+	r, ok := c.GetInt64(k...)
+	if ok {
+		return r
+	}
+	c.Set(d, k...)
+	return d
+}
+
 func (c *Conf) GetInt(k ...string) (int, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -190,6 +228,15 @@ func (c *Conf) GetDInt(d int, k ...string) int {
 	if ok {
 		return r
 	}
+	return d
+}
+
+func (c *Conf) GetDSInt(d int, k ...string) int {
+	r, ok := c.GetInt(k...)
+	if ok {
+		return r
+	}
+	c.Set(d, k...)
 	return d
 }
 

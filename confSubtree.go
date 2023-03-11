@@ -29,11 +29,11 @@ func (c *ConfSubtree) GetString(k ...string) (string, bool) {
 }
 
 func (c *ConfSubtree) GetDString(d string, k ...string) string {
-	r, ok := c.GetString(k...)
-	if ok {
-		return r
-	}
-	return d
+	return c.root.GetDString(d, append(c.path, k...)...)
+}
+
+func (c *ConfSubtree) GetDSString(d string, k ...string) string {
+	return c.root.GetDSString(d, append(c.path, k...)...)
 }
 
 func (c *ConfSubtree) GetFloat64(k ...string) (float64, bool) {
@@ -41,11 +41,11 @@ func (c *ConfSubtree) GetFloat64(k ...string) (float64, bool) {
 }
 
 func (c *ConfSubtree) GetDFloat64(d float64, k ...string) float64 {
-	r, ok := c.GetFloat64(k...)
-	if ok {
-		return r
-	}
-	return d
+	return c.root.GetDFloat64(d, append(c.path, k...)...)
+}
+
+func (c *ConfSubtree) GetDSFloat64(d float64, k ...string) float64 {
+	return c.root.GetDSFloat64(d, append(c.path, k...)...)
 }
 
 func (c *ConfSubtree) GetInt64(k ...string) (int64, bool) {
@@ -53,11 +53,11 @@ func (c *ConfSubtree) GetInt64(k ...string) (int64, bool) {
 }
 
 func (c *ConfSubtree) GetDInt64(d int64, k ...string) int64 {
-	r, ok := c.GetInt64(k...)
-	if ok {
-		return r
-	}
-	return d
+	return c.root.GetDInt64(d, append(c.path, k...)...)
+}
+
+func (c *ConfSubtree) GetDSInt64(d int64, k ...string) int64 {
+	return c.root.GetDSInt64(d, append(c.path, k...)...)
 }
 
 func (c *ConfSubtree) GetInt(k ...string) (int, bool) {
@@ -65,9 +65,21 @@ func (c *ConfSubtree) GetInt(k ...string) (int, bool) {
 }
 
 func (c *ConfSubtree) GetDInt(d int, k ...string) int {
-	r, ok := c.GetInt(k...)
-	if ok {
-		return r
-	}
-	return d
+	return c.root.GetDInt(d, append(c.path, k...)...)
+}
+
+func (c *ConfSubtree) GetDSInt(d int, k ...string) int {
+	return c.root.GetDSInt(d, append(c.path, k...)...)
+}
+
+func (c *ConfSubtree) GetBool(k ...string) (bool, bool) {
+	return c.root.GetBool(append(c.path, k...)...)
+}
+
+func (c *ConfSubtree) GetDBool(d bool, k ...string) bool {
+	return c.root.GetDBool(d, append(c.path, k...)...)
+}
+
+func (c *ConfSubtree) GetDSBool(d bool, k ...string) bool {
+	return c.root.GetDSBool(d, append(c.path, k...)...)
 }

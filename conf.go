@@ -84,7 +84,7 @@ func (c *Conf) Set(v any, k ...string) {
 	c.lock.Unlock()
 }
 
-func (c *Conf) GetToStruct(t *any, k ...string) error {
+func (c *Conf) GetToStruct(t any, k ...string) error {
 	c.lock.Lock()
 	defer c.lock.Unlock()
 	v, ok := lookupTree(c.tree, k)

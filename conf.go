@@ -240,6 +240,34 @@ func (c *Conf) GetDSInt(d int, k ...string) int {
 	return d
 }
 
+func (c *Conf) GetBool(k ...string) (bool, bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	v, ok := lookupTree(c.tree, k)
+	if !ok {
+		return false, false
+	}
+	r, ok := v.(bool)
+	return r, ok
+}
+
+func (c *Conf) GetDBool(d bool, k ...string) bool {
+	r, ok := c.GetBool(k...)
+	if ok {
+		return r
+	}
+	return d
+}
+
+func (c *Conf) GetDSBool(d bool, k ...string) bool {
+	r, ok := c.GetBool(k...)
+	if ok {
+		return r
+	}
+	c.Set(d, k...)
+	return d
+}
+
 type ConfWalkFunc func(k []string, v any)
 
 func (c *Conf) Walk(f ConfWalkFunc) {

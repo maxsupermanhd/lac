@@ -20,7 +20,7 @@ func (c *ConfSubtree) Get(k ...string) (any, bool) {
 	return c.root.Get(append(c.path, k...)...)
 }
 
-func (c *ConfSubtree) GetToStruct(t *any, k ...string) error {
+func (c *ConfSubtree) GetToStruct(t any, k ...string) error {
 	return c.root.GetToStruct(t, append(c.path, k...)...)
 }
 

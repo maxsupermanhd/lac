@@ -5,6 +5,25 @@ import (
 	"sort"
 )
 
+type Val interface {
+	string
+	bool
+	float32
+	float64
+	int
+	int8
+	int16
+	int32
+	int64
+	uint
+	uint8
+	uint16
+	uint32
+	uint64
+	[]any
+	map[string]any
+}
+
 func lookupTree(tree map[string]any, k []string) (any, bool) {
 	if len(k) == 0 {
 		return nil, false
@@ -75,22 +94,29 @@ func walkTree(tree map[string]any, passed []string, fn ConfWalkFunc) {
 // 	return true
 // }
 
+func copyAny(f any) any {
+	switch v := f.(type) {
+	case string, bool, float32, float64, int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64:
+		return v
+	case map[string]any:
+		return copyMap(v)
+	case []any:
+		a := make([]any, len(v))
+		for i := range a {
+			a[i] = copyAny(v)
+		}
+		return a
+	case nil:
+		return nil
+	default:
+		panic(fmt.Sprintf("Unknown type: %#v", v))
+	}
+}
+
 func copyMap(m map[string]any) map[string]any {
 	ret := map[string]any{}
 	for k, v := range m {
-		switch vv := v.(type) {
-		case string, float64:
-			ret[k] = vv
-		case map[string]any:
-			ret[k] = copyMap(vv)
-		case []any:
-			a := make([]any, len(vv))
-			copy(a, vv)
-		case nil:
-			ret[k] = nil
-		default:
-			panic(fmt.Sprintf("Unknown type: %#v", vv))
-		}
+		ret[k] = copyAny(v)
 	}
 	return ret
 }

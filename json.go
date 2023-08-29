@@ -1,6 +1,7 @@
 package lac
 
 import (
+	"bytes"
 	"encoding/json"
 	"os"
 )
@@ -58,7 +59,11 @@ func (c *Conf) ToFileIndentJSON(path string, perm os.FileMode) error {
 func (c *Conf) SetFromBytesJSON(b []byte) error {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	return json.Unmarshal(b, &c.tree)
+	p, err := parseJSON(b)
+	if err == nil {
+		c.tree = p
+	}
+	return err
 }
 
 func (c *Conf) SetFromFileJSON(path string) error {
@@ -67,4 +72,29 @@ func (c *Conf) SetFromFileJSON(path string) error {
 		return err
 	}
 	return c.SetFromBytesJSON(b)
+}
+
+func parseJSON(b []byte) (map[string]any, error) {
+	var parsed map[string]interface{}
+	d := json.NewDecoder(bytes.NewReader(b))
+	d.UseNumber()
+	err := d.Decode(&parsed)
+	if err != nil {
+		return parsed, err
+	}
+	walkTree(parsed, []string{}, func(k []string, v any) {
+		n, ok := v.(json.Number)
+		if !ok {
+			return
+		}
+		if i, err := n.Int64(); err == nil {
+			setTree(parsed, i, k)
+			return
+		}
+		if f, err := n.Float64(); err == nil {
+			setTree(parsed, f, k)
+			return
+		}
+	})
+	return parsed, nil
 }

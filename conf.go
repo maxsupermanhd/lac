@@ -148,14 +148,8 @@ func (c *Conf) GetDSInt64(d int64, k ...string) int64 {
 }
 
 func (c *Conf) GetInt(k ...string) (int, bool) {
-	c.lock.Lock()
-	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
-	if !ok {
-		return 0, false
-	}
-	r, ok := v.(int)
-	return r, ok
+	i, ok := c.GetInt64(k...)
+	return int(int32(i)), ok
 }
 
 func (c *Conf) GetDInt(d int, k ...string) int {

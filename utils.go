@@ -103,7 +103,7 @@ func copyAny(f any) any {
 	case []any:
 		a := make([]any, len(v))
 		for i := range a {
-			a[i] = copyAny(v)
+			a[i] = copyAny(v[i])
 		}
 		return a
 	case nil:

@@ -5,25 +5,6 @@ import (
 	"sort"
 )
 
-type Val interface {
-	string
-	bool
-	float32
-	float64
-	int
-	int8
-	int16
-	int32
-	int64
-	uint
-	uint8
-	uint16
-	uint32
-	uint64
-	[]any
-	map[string]any
-}
-
 func lookupTree(tree map[string]any, k []string) (any, bool) {
 	if len(k) == 0 {
 		return nil, false

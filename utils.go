@@ -7,7 +7,7 @@ import (
 
 func lookupTree(tree map[string]any, k []string) (any, bool) {
 	if len(k) == 0 {
-		return nil, false
+		return tree, true
 	}
 	v, ok := tree[k[0]]
 	if ok {

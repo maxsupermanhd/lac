@@ -24,6 +24,10 @@ func (c *ConfSubtree) GetToStruct(t any, k ...string) error {
 	return c.root.GetToStruct(t, append(c.path, k...)...)
 }
 
+func (c *ConfSubtree) GetMapStringAny(k ...string) (map[string]any, bool) {
+	return c.root.GetMapStringAny(append(c.path, k...)...)
+}
+
 func (c *ConfSubtree) GetString(k ...string) (string, bool) {
 	return c.root.GetString(append(c.path, k...)...)
 }
@@ -82,4 +86,8 @@ func (c *ConfSubtree) GetDBool(d bool, k ...string) bool {
 
 func (c *ConfSubtree) GetDSBool(d bool, k ...string) bool {
 	return c.root.GetDSBool(d, append(c.path, k...)...)
+}
+
+func (c *ConfSubtree) GetKeys(k ...string) ([]string, bool) {
+	return c.root.GetKeys(append(c.path, k...)...)
 }

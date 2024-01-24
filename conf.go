@@ -29,16 +29,6 @@ func (c *Conf) Set(v any, k ...string) {
 	c.lock.Unlock()
 }
 
-func (c *Conf) GetToStruct(t any, k ...string) error {
-	c.lock.Lock()
-	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
-	if !ok {
-		return ErrNoKey
-	}
-	return mapstructure.Decode(v, t)
-}
-
 func (c *Conf) Get(k ...string) (any, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
@@ -47,6 +37,16 @@ func (c *Conf) Get(k ...string) (any, bool) {
 		return nil, false
 	}
 	return copyAny(v), true
+}
+
+func (c *Conf) GetToStruct(t any, k ...string) error {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	v, ok := lookupTree(c.tree, k)
+	if !ok {
+		return ErrNoKey
+	}
+	return mapstructure.Decode(v, t)
 }
 
 func (c *Conf) GetMapStringAny(k ...string) (map[string]any, bool) {
@@ -195,6 +195,24 @@ func (c *Conf) GetDSBool(d bool, k ...string) bool {
 	}
 	c.Set(d, k...)
 	return d
+}
+
+func (c *Conf) GetKeys(k ...string) ([]string, bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	vAny, ok := lookupTree(c.tree, k)
+	if !ok {
+		return nil, false
+	}
+	v, ok := vAny.(map[string]any)
+	if !ok {
+		return nil, false
+	}
+	ret := []string{}
+	for k := range v {
+		ret = append(ret, k)
+	}
+	return ret, true
 }
 
 type ConfWalkFunc func(k []string, v any)

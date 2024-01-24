@@ -57,6 +57,12 @@ func (c *Conf) GetDSInt(d int, k ...string) int
 func (c *Conf) GetDSBool(d bool, k ...string) bool
 ```
 
+If you just want to list keys of the path, there is a helper for that
+
+```go
+func (c *Conf) GetKeys(k ...string) ([]string, bool)
+```
+
 Raw set operation is also available to update the configuration tree.
 
 ```go

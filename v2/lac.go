@@ -41,7 +41,8 @@ type Conf interface {
 	GetKeys(k ...string) ([]string, bool)
 	Walk(f ConfWalkFunc)
 
-	SubTree(path ...string) Conf
+	LinkSubTree(path ...string) Conf
+	DupSubTree(path ...string) Conf
 
 	ToBytesJSON() ([]byte, error)
 	ToBytesIndentJSON() ([]byte, error)

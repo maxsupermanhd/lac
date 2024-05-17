@@ -218,10 +218,22 @@ func (c *MapConf) Walk(f ConfWalkFunc) {
 	c.lock.Unlock()
 }
 
-func (c *MapConf) SubTree(path ...string) Conf {
+func (c *MapConf) LinkSubTree(path ...string) Conf {
 	return &MapConf{
 		tree: c.tree,
 		lock: c.lock,
 		path: append(c.path, path...),
+	}
+}
+
+func (c *MapConf) DupSubTree(path ...string) Conf {
+	m, ok := c.GetMapStringAny(path...)
+	if !ok {
+		return nil
+	}
+	return &MapConf{
+		tree: m,
+		lock: &sync.Mutex{},
+		path: []string{},
 	}
 }

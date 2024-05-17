@@ -12,6 +12,13 @@ func NewSubTree(c *Conf, path ...string) *ConfSubtree {
 	}
 }
 
+func (c *ConfSubtree) SubTree(path ...string) *ConfSubtree {
+	return &ConfSubtree{
+		root: c.root,
+		path: append(c.path, path...),
+	}
+}
+
 func (c *ConfSubtree) Set(v any, k ...string) {
 	c.root.Set(v, append(c.path, k...)...)
 }

@@ -1,4 +1,4 @@
-module github.com/maxsupermanhd/lac
+module github.com/maxsupermanhd/lac/v2
 
 go 1.20
 

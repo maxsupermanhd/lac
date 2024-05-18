@@ -59,7 +59,7 @@ func walkTree(tree map[string]any, passed []string, fn ConfWalkFunc) {
 			walkTree(m, p, fn)
 			continue
 		}
-		fn(p, v)
+		fn(p, copyAny(v))
 	}
 }
 

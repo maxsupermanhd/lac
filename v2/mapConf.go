@@ -20,14 +20,14 @@ func (c *MapConf) CopyTree(t map[string]any) {
 
 func (c *MapConf) Set(v any, k ...string) {
 	c.lock.Lock()
-	setTree(c.tree, copyAny(v), k)
+	setTree(c.tree, copyAny(v), append(c.path, k...))
 	c.lock.Unlock()
 }
 
 func (c *MapConf) Get(k ...string) (any, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
+	v, ok := lookupTree(c.tree, append(c.path, k...))
 	if !ok {
 		return nil, false
 	}
@@ -37,7 +37,7 @@ func (c *MapConf) Get(k ...string) (any, bool) {
 func (c *MapConf) GetToStruct(t any, k ...string) error {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
+	v, ok := lookupTree(c.tree, append(c.path, k...))
 	if !ok {
 		return ErrNoKey
 	}
@@ -47,7 +47,7 @@ func (c *MapConf) GetToStruct(t any, k ...string) error {
 func (c *MapConf) GetMapStringAny(k ...string) (map[string]any, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
+	v, ok := lookupTree(c.tree, append(c.path, k...))
 	if !ok {
 		return nil, false
 	}
@@ -61,7 +61,7 @@ func (c *MapConf) GetMapStringAny(k ...string) (map[string]any, bool) {
 func (c *MapConf) GetString(k ...string) (string, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
+	v, ok := lookupTree(c.tree, append(c.path, k...))
 	if !ok {
 		return "", false
 	}
@@ -89,7 +89,7 @@ func (c *MapConf) GetDSString(d string, k ...string) string {
 func (c *MapConf) GetFloat64(k ...string) (float64, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
+	v, ok := lookupTree(c.tree, append(c.path, k...))
 	if !ok {
 		return 0.0, false
 	}
@@ -117,7 +117,7 @@ func (c *MapConf) GetDSFloat64(d float64, k ...string) float64 {
 func (c *MapConf) GetInt64(k ...string) (int64, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
+	v, ok := lookupTree(c.tree, append(c.path, k...))
 	if !ok {
 		return 0, false
 	}
@@ -167,7 +167,7 @@ func (c *MapConf) GetDSInt(d int, k ...string) int {
 func (c *MapConf) GetBool(k ...string) (bool, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
+	v, ok := lookupTree(c.tree, append(c.path, k...))
 	if !ok {
 		return false, false
 	}
@@ -195,7 +195,7 @@ func (c *MapConf) GetDSBool(d bool, k ...string) bool {
 func (c *MapConf) GetSliceAny(k ...string) ([]any, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
+	v, ok := lookupTree(c.tree, append(c.path, k...))
 	if !ok {
 		return nil, false
 	}
@@ -226,7 +226,7 @@ func (c *MapConf) GetDSSliceAny(d []any, k ...string) []any {
 func (c *MapConf) GetSliceString(k ...string) ([]string, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
+	v, ok := lookupTree(c.tree, append(c.path, k...))
 	if !ok {
 		return nil, false
 	}
@@ -257,7 +257,7 @@ func (c *MapConf) GetDSSliceString(d []string, k ...string) []string {
 func (c *MapConf) GetSliceInt(k ...string) ([]int, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
+	v, ok := lookupTree(c.tree, append(c.path, k...))
 	if !ok {
 		return nil, false
 	}
@@ -288,7 +288,7 @@ func (c *MapConf) GetDSSliceInt(d []int, k ...string) []int {
 func (c *MapConf) GetSliceFloat(k ...string) ([]float64, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	v, ok := lookupTree(c.tree, k)
+	v, ok := lookupTree(c.tree, append(c.path, k...))
 	if !ok {
 		return nil, false
 	}
@@ -319,7 +319,7 @@ func (c *MapConf) GetDSSliceFloat(d []float64, k ...string) []float64 {
 func (c *MapConf) GetKeys(k ...string) ([]string, bool) {
 	c.lock.Lock()
 	defer c.lock.Unlock()
-	vAny, ok := lookupTree(c.tree, k)
+	vAny, ok := lookupTree(c.tree, append(c.path, k...))
 	if !ok {
 		return nil, false
 	}
@@ -328,8 +328,8 @@ func (c *MapConf) GetKeys(k ...string) ([]string, bool) {
 		return nil, false
 	}
 	ret := []string{}
-	for k := range v {
-		ret = append(ret, k)
+	for kk := range v {
+		ret = append(ret, kk)
 	}
 	return ret, true
 }

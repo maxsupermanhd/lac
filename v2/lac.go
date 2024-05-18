@@ -38,6 +38,22 @@ type Conf interface {
 	GetDBool(d bool, k ...string) bool
 	GetDSBool(d bool, k ...string) bool
 
+	GetSliceAny(k ...string) ([]any, bool)
+	GetDSliceAny(d []any, k ...string) []any
+	GetDSSliceAny(d []any, k ...string) []any
+
+	GetSliceString(k ...string) ([]string, bool)
+	GetDSliceString(d []string, k ...string) []string
+	GetDSSliceString(d []string, k ...string) []string
+
+	GetSliceInt(k ...string) ([]int, bool)
+	GetDSliceInt(d []int, k ...string) []int
+	GetDSSliceInt(d []int, k ...string) []int
+
+	GetSliceFloat(k ...string) ([]float64, bool)
+	GetDSliceFloat(d []float64, k ...string) []float64
+	GetDSSliceFloat(d []float64, k ...string) []float64
+
 	GetKeys(k ...string) ([]string, bool)
 	Walk(f ConfWalkFunc)
 

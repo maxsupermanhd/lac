@@ -82,16 +82,32 @@ func copyAny(f any) any {
 	case map[string]any:
 		return copyMap(v)
 	case []any:
-		a := make([]any, len(v))
-		for i := range a {
-			a[i] = copyAny(v[i])
-		}
-		return a
+		return copySliceAny(v)
 	case nil:
 		return nil
 	default:
 		panic(fmt.Sprintf("Unknown type: %#v", v))
 	}
+}
+
+func copySlice[T any](f []any) ([]T, bool) {
+	ret := make([]T, len(f))
+	for i := range f {
+		v, ok := f[i].(T)
+		if !ok {
+			return nil, false
+		}
+		ret[i] = v
+	}
+	return ret, true
+}
+
+func copySliceAny(f []any) []any {
+	a := make([]any, len(f))
+	for i := range a {
+		a[i] = copyAny(f[i])
+	}
+	return a
 }
 
 func copyMap(m map[string]any) map[string]any {

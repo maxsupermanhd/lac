@@ -20,7 +20,7 @@ func (c *MapConf) CopyTree(t map[string]any) {
 
 func (c *MapConf) Set(v any, k ...string) {
 	c.lock.Lock()
-	setTree(c.tree, v, k)
+	setTree(c.tree, copyAny(v), k)
 	c.lock.Unlock()
 }
 
@@ -185,6 +185,130 @@ func (c *MapConf) GetDBool(d bool, k ...string) bool {
 
 func (c *MapConf) GetDSBool(d bool, k ...string) bool {
 	r, ok := c.GetBool(k...)
+	if ok {
+		return r
+	}
+	c.Set(d, k...)
+	return d
+}
+
+func (c *MapConf) GetSliceAny(k ...string) ([]any, bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	v, ok := lookupTree(c.tree, k)
+	if !ok {
+		return nil, false
+	}
+	r, ok := v.([]any)
+	if !ok {
+		return nil, false
+	}
+	return copySliceAny(r), true
+}
+
+func (c *MapConf) GetDSliceAny(d []any, k ...string) []any {
+	r, ok := c.GetSliceAny(k...)
+	if ok {
+		return r
+	}
+	return d
+}
+
+func (c *MapConf) GetDSSliceAny(d []any, k ...string) []any {
+	r, ok := c.GetSliceAny(k...)
+	if ok {
+		return r
+	}
+	c.Set(d, k...)
+	return d
+}
+
+func (c *MapConf) GetSliceString(k ...string) ([]string, bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	v, ok := lookupTree(c.tree, k)
+	if !ok {
+		return nil, false
+	}
+	r, ok := v.([]any)
+	if !ok {
+		return nil, false
+	}
+	return copySlice[string](r)
+}
+
+func (c *MapConf) GetDSliceString(d []string, k ...string) []string {
+	r, ok := c.GetSliceString(k...)
+	if ok {
+		return r
+	}
+	return d
+}
+
+func (c *MapConf) GetDSSliceString(d []string, k ...string) []string {
+	r, ok := c.GetSliceString(k...)
+	if ok {
+		return r
+	}
+	c.Set(d, k...)
+	return d
+}
+
+func (c *MapConf) GetSliceInt(k ...string) ([]int, bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	v, ok := lookupTree(c.tree, k)
+	if !ok {
+		return nil, false
+	}
+	r, ok := v.([]any)
+	if !ok {
+		return nil, false
+	}
+	return copySlice[int](r)
+}
+
+func (c *MapConf) GetDSliceInt(d []int, k ...string) []int {
+	r, ok := c.GetSliceInt(k...)
+	if ok {
+		return r
+	}
+	return d
+}
+
+func (c *MapConf) GetDSSliceInt(d []int, k ...string) []int {
+	r, ok := c.GetSliceInt(k...)
+	if ok {
+		return r
+	}
+	c.Set(d, k...)
+	return d
+}
+
+func (c *MapConf) GetSliceFloat(k ...string) ([]float64, bool) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	v, ok := lookupTree(c.tree, k)
+	if !ok {
+		return nil, false
+	}
+	r, ok := v.([]any)
+	if !ok {
+		return nil, false
+	}
+	return copySlice[float64](r)
+}
+
+func (c *MapConf) GetDSliceFloat(d []float64, k ...string) []float64 {
+	r, ok := c.GetSliceFloat(k...)
+	if ok {
+		return r
+	}
+	return d
+}
+
+func (c *MapConf) GetDSSliceFloat(d []float64, k ...string) []float64 {
+	r, ok := c.GetSliceFloat(k...)
 	if ok {
 		return r
 	}

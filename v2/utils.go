@@ -1,6 +1,7 @@
 package lac
 
 import (
+	"encoding/json"
 	"fmt"
 	"sort"
 )
@@ -83,6 +84,8 @@ func copyAny(f any) any {
 		return copyMap(v)
 	case []any:
 		return copySliceAny(v)
+	case json.Number:
+		return v
 	case nil:
 		return nil
 	default:

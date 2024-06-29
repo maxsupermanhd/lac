@@ -1,6 +1,7 @@
 package lac
 
 import (
+	"slices"
 	"testing"
 )
 
@@ -41,6 +42,28 @@ func Test_parseJSON(t *testing.T) {
 		t.Fatal("B is not ok")
 	}
 	if n3 != 2.5 {
+		t.Fatal("B is wrong")
+	}
+}
+
+func Test_JSONArrays(t *testing.T) {
+	jin := []byte(`{"A": ["hello", "world"], "B": [1, 2, 3]}`)
+	cfg, err := FromBytesJSON(jin)
+	if err != nil {
+		t.Fatal(err)
+	}
+	a, ok := cfg.GetSliceString("A")
+	if !ok {
+		t.Fatal("a is not ok")
+	}
+	if slices.Compare(a, []string{"hello", "world"}) != 0 {
+		t.Fatal("a is wrong")
+	}
+	b, ok := cfg.GetSliceInt("B")
+	if !ok {
+		t.Fatal("B is not ok")
+	}
+	if slices.Compare(b, []int{1, 2, 3}) != 0 {
 		t.Fatal("B is wrong")
 	}
 }

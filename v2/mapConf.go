@@ -1,6 +1,7 @@
 package lac
 
 import (
+	"encoding/json"
 	"sync"
 
 	"github.com/mitchellh/mapstructure"
@@ -265,7 +266,40 @@ func (c *MapConf) GetSliceInt(k ...string) ([]int, bool) {
 	if !ok {
 		return nil, false
 	}
-	return copySlice[int](r)
+	ret := make([]int, len(r))
+	for i, rr := range r {
+		switch vv := rr.(type) {
+		case json.Number:
+			vvv, err := vv.Int64()
+			if err != nil {
+				return nil, false
+			}
+			ret[i] = int(vvv)
+		case int:
+			ret[i] = int(vv)
+		case int8:
+			ret[i] = int(vv)
+		case int16:
+			ret[i] = int(vv)
+		case int32:
+			ret[i] = int(vv)
+		case int64:
+			ret[i] = int(vv)
+		case uint:
+			ret[i] = int(vv)
+		case uint8:
+			ret[i] = int(vv)
+		case uint16:
+			ret[i] = int(vv)
+		case uint32:
+			ret[i] = int(vv)
+		case uint64:
+			ret[i] = int(vv)
+		default:
+			return nil, false
+		}
+	}
+	return ret, true
 }
 
 func (c *MapConf) GetDSliceInt(d []int, k ...string) []int {

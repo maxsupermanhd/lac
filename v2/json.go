@@ -30,6 +30,12 @@ func (c *MapConf) ToBytesJSON() ([]byte, error) {
 	return json.Marshal(c.tree)
 }
 
+func (c *MapConf) MarshalJSON() ([]byte, error) {
+	c.lock.Lock()
+	defer c.lock.Unlock()
+	return json.Marshal(c.tree)
+}
+
 func (c *MapConf) ToBytesIndentJSON() ([]byte, error) {
 	c.lock.Lock()
 	defer c.lock.Unlock()

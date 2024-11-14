@@ -61,6 +61,7 @@ type Conf interface {
 	DupSubTree(path ...string) Conf
 
 	ToBytesJSON() ([]byte, error)
+	MarshalJSON() ([]byte, error)
 	ToBytesIndentJSON() ([]byte, error)
 	ToFileJSON(path string, perm os.FileMode) error
 	ToFileIndentJSON(path string, perm os.FileMode) error

@@ -94,8 +94,18 @@ func (c *MapConf) GetFloat64(k ...string) (float64, bool) {
 	if !ok {
 		return 0.0, false
 	}
-	r, ok := v.(float64)
-	return r, ok
+	switch r := v.(type) {
+	case float64:
+		return r, true
+	case float32:
+		return float64(r), true
+	case json.Number:
+		rr, err := r.Float64()
+		if err == nil {
+			return rr, true
+		}
+	}
+	return 0.0, false
 }
 
 func (c *MapConf) GetDFloat64(d float64, k ...string) float64 {
@@ -122,8 +132,34 @@ func (c *MapConf) GetInt64(k ...string) (int64, bool) {
 	if !ok {
 		return 0, false
 	}
-	r, ok := v.(int64)
-	return r, ok
+	switch r := v.(type) {
+	case json.Number:
+		rr, err := r.Int64()
+		if err == nil {
+			return rr, true
+		}
+	case int:
+		return int64(r), true
+	case int8:
+		return int64(r), true
+	case int16:
+		return int64(r), true
+	case int32:
+		return int64(r), true
+	case int64:
+		return int64(r), true
+	case uint:
+		return int64(r), true
+	case uint8:
+		return int64(r), true
+	case uint16:
+		return int64(r), true
+	case uint32:
+		return int64(r), true
+	case uint64:
+		return int64(r), true
+	}
+	return 0, false
 }
 
 func (c *MapConf) GetDInt64(d int64, k ...string) int64 {
@@ -330,7 +366,24 @@ func (c *MapConf) GetSliceFloat(k ...string) ([]float64, bool) {
 	if !ok {
 		return nil, false
 	}
-	return copySlice[float64](r)
+	ret := make([]float64, len(r))
+	for i, rr := range r {
+		switch vv := rr.(type) {
+		case json.Number:
+			vvv, err := vv.Float64()
+			if err != nil {
+				return nil, false
+			}
+			ret[i] = float64(vvv)
+		case float32:
+			ret[i] = float64(vv)
+		case float64:
+			ret[i] = vv
+		default:
+			return nil, false
+		}
+	}
+	return ret, true
 }
 
 func (c *MapConf) GetDSliceFloat(d []float64, k ...string) []float64 {
